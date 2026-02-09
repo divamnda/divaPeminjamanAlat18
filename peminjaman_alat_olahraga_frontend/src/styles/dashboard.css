@@ -1,0 +1,78 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #edf0f1;
+}
+
+.dashboard {
+  padding: 20px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.card {
+  background: #11597b;
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.card h2 {
+  margin: 10px 0 0;
+  font-size: 28px;
+}
+
+table {
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  border-collapse: collapse;
+  overflow: hidden;
+}
+
+thead {
+  background: #f1f5f9;
+}
+
+th {
+  padding: 14px;
+  font-size: 13px;
+  text-align: left;
+}
+
+td {
+  padding: 14px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+.status {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status.Dipinjam {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.status.Dikembalikan {
+  background: #dcfce7;
+  color: #15803d;
+}
+.dashboard {
+  display: flex;
+}
+
+.main {
+  flex: 1;
+  padding: 20px;
+  background: #edf0f1;
+}

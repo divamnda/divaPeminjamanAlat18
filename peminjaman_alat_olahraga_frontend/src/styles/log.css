@@ -1,0 +1,32 @@
+.badge {
+  padding: 4px 8px;
+  border-radius: 6px;
+  color: white;
+  font-size: 12px;
+}
+
+.badge.baik {
+  background: green;
+}
+
+.badge.rusak {
+  background: orange;
+}
+
+.badge.hilang {
+  background: red;
+}
+.btn-approve {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #2563eb;
+  color: white;
+  font-weight: 600;
+}
+
+.btn-approve:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

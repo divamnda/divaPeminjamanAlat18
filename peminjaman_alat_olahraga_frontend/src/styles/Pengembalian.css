@@ -1,0 +1,66 @@
+.pengembalian-container {
+  padding: 30px;
+  background-color: #f4f6f8;
+min-height: calc(100vh - 60px);
+  font-family: Arial, sans-serif;
+}
+
+.pengembalian-container h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #0f6b78;
+
+}
+
+.pengembalian-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.pengembalian-table thead {
+  background-color: #0f6b78;
+  color: white;
+}
+
+.pengembalian-table th,
+.pengembalian-table td {
+  padding: 12px 15px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.pengembalian-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.btn-kembali {
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.btn-kembali:hover {
+  background-color: #27ae60;
+}
+
+@media (max-width: 768px) {
+  .pengembalian-table th,
+  .pengembalian-table td {
+    font-size: 13px;
+    padding: 10px;
+  }
+}
+.pengembalian-container {
+  flex: 1;                 /* 🔥 ini kuncinya */
+  padding: 30px;
+  background-color: #f4f6f8;
+  min-height: 100vh;
+  box-sizing: border-box;
+}

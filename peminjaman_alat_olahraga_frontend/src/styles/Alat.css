@@ -1,0 +1,142 @@
+.dashboard {
+  display: flex;
+  min-height: 100vh;
+  background: #f4f6f8;
+}
+
+.main {
+  flex: 1;
+  padding: 24px 32px;
+  background: #f4f6f8;
+}
+
+.header-alat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-alat h2 {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.header-alat button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.header-alat button:hover {
+  background: #1e40af;
+}
+
+.table {
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  border-collapse: collapse;
+  overflow: hidden;
+}
+
+.table thead {
+  background: #f1f5f9;
+}
+
+.table th,
+.table td {
+  padding: 12px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+.table td button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  margin-right: 6px;
+}
+
+.table td button:nth-child(1) {
+  background: #facc15;
+}
+
+.table td button:nth-child(2) {
+  background: #ef4444;
+  color: white;
+}
+
+.table td button:nth-child(3) {
+  background: #22c55e;
+  color: white;
+}
+
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.popup-form {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.popup-form input,
+.popup-form select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.popup-buttons button {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.popup-buttons button[type="submit"] {
+  background: #2563eb;
+  color: white;
+}
+
+.popup-buttons button[type="submit"]:hover {
+  background: #1e40af;
+}
+
+.popup-buttons button[type="button"] {
+  background: #e5e7eb;
+}
+
+.popup-buttons button[type="button"]:hover {
+  background: #d1d5db;
+}
+
+.dashboard,
+.main,
+.table,
+.header-alat {
+  pointer-events: auto;
+}
