@@ -137,3 +137,73 @@
   opacity: 1 !important;
   visibility: visible !important;
 }
+.laporan-page {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.laporan-sidebar {
+  flex: 0 0 auto;
+}
+
+.laporan-content {
+  flex: 1;
+  min-width: 0;
+  padding: 24px;
+}
+
+.only-print {
+  display: none;
+}
+
+@media print {
+  .no-print,
+  .laporan-sidebar,
+  .laporan-sidebar * {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  .only-print {
+    display: block !important;
+  }
+
+  .laporan-page {
+    display: block !important;
+  }
+
+  .laporan-content,
+  .laporan-wrap {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  .card {
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .table-wrap {
+    overflow: visible !important;
+  }
+
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  th, td {
+    border: 1px solid #000 !important;
+  }
+
+  button {
+    display: none !important;
+  }
+
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+}

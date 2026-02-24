@@ -9,7 +9,7 @@ exports.getLogPengembalian = (req, res) => {
       p.jumlah,
       pg.kondisi_alat AS kondisi,
       pg.status_pengembalian AS status_pengembalian,
-      DATE_FORMAT(pg.tanggal_dikembalikan, '%d/%m/%Y %H:%i:%s') AS tanggal
+      DATE_FORMAT(pg.tanggal_dikembalikan, '%d/%m/%Y') AS tanggal
     FROM pengembalian pg
     JOIN peminjaman p ON pg.id_peminjaman = p.id_pinjam
     JOIN alat_olahraga a ON p.id_alat = a.id_alat
@@ -17,17 +17,10 @@ exports.getLogPengembalian = (req, res) => {
   `;
 
   db.query(sql, (err, result) => {
-    if (err) {
-      console.log("SQL ERROR:", err);
-      return res.status(500).json(err);
-    }
+    if (err) return res.status(500).json(err);
     res.json(result);
   });
 };
-
-
-
-
 
 exports.setujuiPengembalian = (req, res) => {
   const { id_pengembalian } = req.params;

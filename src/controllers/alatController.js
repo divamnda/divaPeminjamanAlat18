@@ -78,29 +78,31 @@ exports.tambahStok = (req, res) => {
   const { id } = req.params;
   const { jumlah } = req.body;
 
-  if (!jumlah || jumlah <= 0) {
-    return res.status(400).json({ message: "Jumlah stok tidak valid" });
-  }
+  const jumlahFix = Math.max(1, Number(jumlah || 1)); 
 
- db.query(
-  "UPDATE alat_olahraga SET stok = stok + ? WHERE id_alat = ?",
-  [jumlah, id],
-  (err, result) => {
-    if (err) return res.status(500).json(err);
+  const sql = `
+    UPDATE alat_olahraga
+    SET stok = stok + ?
+    WHERE id_alat = ?
+  `;
 
-      if (result.affectedRows === 0) {
-        return res.status(404).json({ message: "Alat tidak ditemukan" });
-      }
+  db.query(sql, [jumlahFix, id], (err, result) => {
+    if (err) return res.status(500).json({ message: err.sqlMessage || err.message });
 
-      db.query(
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Alat tidak ditemukan" });
+    }
+
+    db.query(
       "INSERT INTO log_aktivitas (aktivitas, tabel, data_id) VALUES (?, ?, ?)",
-      [`Menambah stok alat ID ${id} sebanyak ${jumlah}`, "alat_olahraga", id]
+      [`Menambah stok alat ID ${id} (+${jumlahFix})`, "alat_olahraga", id]
     );
 
-      res.json({ message: "Stok berhasil ditambahkan" });
-    }
-  );
+    return res.json({ message: "Stok berhasil ditambah" });
+  });
 };
+
+
 
 exports.deleteAlat = (req, res) => {
   const { id } = req.params;

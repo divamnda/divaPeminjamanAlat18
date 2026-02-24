@@ -19,9 +19,9 @@ export default function Alat() {
   const [kategoriId, setKategoriId] = useState("");
 
   const userLogin = JSON.parse(localStorage.getItem("user"));
-  const role = userLogin?.role; 
-  const isPeminjam = role === "user"; 
-  const canManage = !isPeminjam;      
+  const role = userLogin?.role;
+  const isPeminjam = role === "user";
+  const canManage = !isPeminjam;
 
   const fetchAlat = async () => {
     try {
@@ -32,7 +32,7 @@ export default function Alat() {
       setAlat(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Gagal ambil alat:", err);
-      setAlat([]); 
+      setAlat([]);
     }
   };
 
@@ -86,7 +86,7 @@ export default function Alat() {
       try {
         result = text ? JSON.parse(text) : {};
       } catch (err) {
-       
+
         result = { message: text };
       }
 
@@ -104,7 +104,7 @@ export default function Alat() {
       alert("Gagal terhubung ke server");
     }
   };
-  
+
   const resetForm = () => {
     setNamaAlat("");
     setStok("");
@@ -186,9 +186,24 @@ export default function Alat() {
                 type="number"
                 placeholder="Stok"
                 value={stok}
-                onChange={e => setStok(e.target.value)}
+                min={1}
+                step={1}
+                onChange={(e) => {
+                  const val = Number(e.target.value);
+                  if (Number.isNaN(val)) {
+                    setStok(1);
+                    return;
+                  }
+                  setStok(Math.max(1, val));
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "-" || e.key === "e" || e.key === "E" || e.key === "+") {
+                    e.preventDefault();
+                  }
+                }}
                 required
               />
+
 
               <input
                 type="text"
@@ -236,7 +251,17 @@ export default function Alat() {
                 type="number"
                 placeholder="Jumlah stok"
                 value={stokTambah}
-                onChange={e => setStokTambah(e.target.value)}
+                min={1}
+                step={1}
+                onChange={(e) => {
+                  const val = Number(e.target.value);
+                  setStokTambah(Number.isNaN(val) ? 1 : Math.max(1, val));
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "-" || e.key === "e" || e.key === "E" || e.key === "+") {
+                    e.preventDefault();
+                  }
+                }}
                 required
               />
 
@@ -265,40 +290,41 @@ export default function Alat() {
 
           </thead>
 
-<tbody>
-  {Array.isArray(alat) && alat.length > 0 ? (
-    alat.map((item) => (
-      <tr key={item.id_alat}>
-        <td>{item.nama_alat}</td>
-        <td>{item.stok}</td>
-        <td>{item.kondisi}</td>
-        <td>{item.nama_kategori || "-"}</td>
+          <tbody>
+            {Array.isArray(alat) && alat.length > 0 ? (
+              alat.map((item) => (
+                <tr key={item.id_alat}>
+                  <td>{item.nama_alat}</td>
+                  <td>{item.stok}</td>
+                  <td>{item.kondisi}</td>
+                  <td>{item.nama_kategori || "-"}</td>
 
-        {canManage && (
-          <td>
-            <button onClick={() => handleEdit(item)}>Edit</button>
-            <button onClick={() => handleDelete(item.id_alat)}>Hapus</button>
-            <button
-              onClick={() => {
-                setStokId(item.id_alat);
-                setStokTambah("");
-                setShowStokPopup(true);
-              }}
-            >
-              + Stok
-            </button>
-          </td>
-        )}
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan={canManage ? 5 : 4} style={{ textAlign: "center" }}>
-        Data alat belum ada / gagal dimuat
-      </td>
-    </tr>
-  )}
-</tbody>
+                  {canManage && (
+                    <td>
+                      <button onClick={() => handleEdit(item)}>Edit</button>
+                      <button onClick={() => handleDelete(item.id_alat)}>Hapus</button>
+                      <button
+                        onClick={() => {
+                          setStokId(item.id_alat);
+                          setStokTambah(1);
+                          setShowStokPopup(true);
+                        }}
+                      >
+                        + Stok
+                      </button>
+
+                    </td>
+                  )}
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={canManage ? 5 : 4} style={{ textAlign: "center" }}>
+                  Data alat belum ada / gagal dimuat
+                </td>
+              </tr>
+            )}
+          </tbody>
 
 
         </table>

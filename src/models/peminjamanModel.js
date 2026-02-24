@@ -11,4 +11,4 @@ export const getAllPeminjaman = (callback) => {
 
 export const createPeminjaman = (data, callback) => {
     db.query("INSERT INTO peminjaman SET ?", data, callback);
-}; 
+};     

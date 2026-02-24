@@ -110,9 +110,7 @@ export default function LogPengembalian() {
               <th>Jumlah</th>
               <th>Kondisi</th>
               <th>Tanggal</th>
-
-
-
+              
               {isPetugas && <th>Aksi</th>}
             </tr>
           </thead>

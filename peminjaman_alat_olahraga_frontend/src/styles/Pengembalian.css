@@ -58,7 +58,7 @@ min-height: calc(100vh - 60px);
   }
 }
 .pengembalian-container {
-  flex: 1;                 /* 🔥 ini kuncinya */
+  flex: 1;                
   padding: 30px;
   background-color: #f4f6f8;
   min-height: 100vh;

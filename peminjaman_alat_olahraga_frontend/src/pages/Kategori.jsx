@@ -7,6 +7,8 @@ export default function Kategori() {
     const [namaKategori, setNamaKategori] = useState("");
     const [editId, setEditId] = useState(null);
     const [showForm, setShowForm] = useState(false);
+    const [stok, setStok] = useState(1);
+
 
     const getKategori = async () => {
         try {
@@ -25,44 +27,69 @@ export default function Kategori() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const url = editId
-            ? `http://localhost:3000/kategori/${editId}`
+        const id = editId;
+        const url = id
+            ? `http://localhost:3000/kategori/${id}`
             : "http://localhost:3000/kategori";
 
-        const method = editId ? "PUT" : "POST";
+        const method = id ? "PUT" : "POST";
+
+        const payload = {
+            nama_kategori: namaKategori.trim(),
+            stok: Number(stok),
+        };
 
         try {
             const res = await fetch(url, {
                 method,
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ nama_kategori: namaKategori })
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
             });
 
-            const result = await res.json();
+            const raw = await res.text();
+            let result;
+            try {
+                result = raw ? JSON.parse(raw) : {};
+            } catch {
+                result = { message: raw };
+            }
+
+            console.log("DEBUG UPDATE:", {
+                url,
+                method,
+                status: res.status,
+                payload,
+                raw,      
+                result,   
+            });
 
             if (!res.ok) {
-                alert(result.message || "Gagal menyimpan");
+                alert(result?.message || `Gagal menyimpan (HTTP ${res.status})`);
                 return;
             }
 
-            alert(editId ? "Kategori berhasil diupdate" : "Kategori berhasil ditambah");
+            alert(id ? "Kategori berhasil diupdate" : "Kategori berhasil ditambah");
 
             setNamaKategori("");
             setEditId(null);
             setShowForm(false);
+            setStok(1);
             getKategori();
-        } catch (error) {
-            console.error(error);
+        } catch (err) {
+            console.error("Fetch error:", err);
+            alert("Gagal terhubung ke server.");
         }
     };
 
+
     const handleEdit = (k) => {
+        const id = k.id_kategori ?? k.id;
         setNamaKategori(k.nama_kategori);
-        setEditId(k.id);
+        setEditId(id);
         setShowForm(true);
+        setStok(k.stok ?? 1);
     };
+
 
 
     const handleDelete = async (id) => {
@@ -106,10 +133,12 @@ export default function Kategori() {
                             setShowForm(true);
                             setEditId(null);
                             setNamaKategori("");
+                            setStok(1);
                         }}
                     >
                         + Tambah Kategori
                     </button>
+
                 </div>
 
                 <table className="table">
@@ -130,7 +159,7 @@ export default function Kategori() {
                             </tr>
                         ) : (
                             kategori.map((k, i) => {
-                                const id = k.id_kategori ?? k.id; // jaga-jaga kalau backend kirim "id"
+                                const id = k.id_kategori ?? k.id;
 
                                 return (
                                     <tr key={id ?? `row-${i}`}>
@@ -175,6 +204,25 @@ export default function Kategori() {
                                 required
                             />
 
+                            <input
+                                type="number"
+                                placeholder="Stok"
+                                value={stok}
+                                min={1}
+                                step={1}
+                                onChange={(e) => {
+                                    const val = Number(e.target.value);
+                                    setStok(Number.isNaN(val) ? 1 : Math.max(1, val));
+                                }}
+                                onKeyDown={(e) => {
+                                    if (e.key === "-" || e.key === "e" || e.key === "E" || e.key === "+") {
+                                        e.preventDefault();
+                                    }
+                                }}
+                                required
+                            />
+
+
                             <button type="submit">
                                 {editId ? "Update" : "Simpan"}
                             </button>
@@ -186,7 +234,9 @@ export default function Kategori() {
                                     setShowForm(false);
                                     setEditId(null);
                                     setNamaKategori("");
+                                    setStok(1);
                                 }}
+
                             >
                                 Batal
                             </button>

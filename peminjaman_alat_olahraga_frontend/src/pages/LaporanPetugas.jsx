@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "../styles/laporan.css";
+import Sidebar from "../components/Sidebar";
 
 
 const API_URL = "http://localhost:3000/laporan";
@@ -167,6 +168,8 @@ function normalizeItem(raw, index) {
 
   const jumlah = Number(raw.jumlah ?? raw.qty ?? raw.total ?? 1);
 
+
+
   return {
     id: id || fallbackId,
     tanggalPinjam,
@@ -179,6 +182,8 @@ function normalizeItem(raw, index) {
 }
 
 
+
+
 export default function LaporanPetugas() {
   const today = useMemo(() => new Date(), []);
   const sevenDaysAgo = useMemo(() => {
@@ -187,6 +192,8 @@ export default function LaporanPetugas() {
     return d;
   }, []);
 
+
+
   const [filter, setFilter] = useState({
     tanggalMulai: toISODateInput(sevenDaysAgo),
     tanggalSelesai: toISODateInput(today),
@@ -194,6 +201,8 @@ export default function LaporanPetugas() {
     kategori: "SEMUA",
     q: "",
   });
+
+
 
 
   const [data, setData] = useState([]);
@@ -359,187 +368,194 @@ export default function LaporanPetugas() {
 
 
   return (
-    <div className="laporan-wrap">
-      <div className="no-print header">
-        <h2>Laporan Peminjaman Alat (Petugas)</h2>
-        <p className="sub">Filter data, lihat ringkasan, unduh CSV, atau cetak laporan.</p>
+    <div className="laporan-page">
+      {/* SIDEBAR */}
+      <div className="no-print laporan-sidebar">
+        <Sidebar />
       </div>
 
-      <div className="no-print card">
-        <div className="grid">
-          <div className="field">
-            <label>Tanggal Mulai</label>
-            <input
-              type="date"
-              value={filter.tanggalMulai}
-              onChange={(e) => updateFilter({ tanggalMulai: e.target.value })}
-            />
-          </div>
-
-          <div className="field">
-            <label>Tanggal Selesai</label>
-            <input
-              type="date"
-              value={filter.tanggalSelesai}
-              onChange={(e) => updateFilter({ tanggalSelesai: e.target.value })}
-            />
-          </div>
-
-          <div className="field">
-            <label>Status</label>
-            <select value={filter.status} onChange={(e) => updateFilter({ status: e.target.value })}>
-              <option value="SEMUA">Semua</option>
-              <option value="DIPINJAM">Dipinjam</option>
-              <option value="DIKEMBALIKAN">Dikembalikan</option>
-              <option value="TERLAMBAT">Terlambat</option>
-            </select>
-          </div>
-
-          <div className="field">
-            <label>Kategori</label>
-            <select
-              value={filter.kategori}
-              onChange={(e) => updateFilter({ kategori: e.target.value })}
-            >
-              {kategoriList.map((k) => (
-                <option key={k} value={k}>
-                  {k}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="field span-2">
-            <label>Nama Peminjam</label>
-            <input
-              type="text"
-              placeholder="Ketik nama peminjam... (contoh: agus)"
-              value={filter.q}
-              onChange={(e) => updateFilter({ q: e.target.value })}
-            />
-
-          </div>
+      <div className="laporan-wrap laporan-content">
+        <div className="no-print header">
+          <h2>Laporan Peminjaman Alat (Petugas)</h2>
+          <p className="sub">Filter data, lihat ringkasan, unduh CSV, atau cetak laporan.</p>
         </div>
 
-        <div className="actions">
-          <button onClick={ambilLaporan} disabled={loading}>
-            {loading ? "Memuat..." : "Refresh Data"}
-          </button>
-          <button onClick={handleExportCSV} disabled={loading || dataTersaring.length === 0}>
-            Export CSV
-          </button>
-          <button onClick={handlePrint} disabled={dataTersaring.length === 0}>
-            Cetak
-          </button>
-        </div>
+        <div className="no-print card">
+          <div className="grid">
+            <div className="field">
+              <label>Tanggal Mulai</label>
+              <input
+                type="date"
+                value={filter.tanggalMulai}
+                onChange={(e) => updateFilter({ tanggalMulai: e.target.value })}
+              />
+            </div>
 
-        {error ? (
-          <div className="error">
-            ⚠️ {error}
-            <div style={{ marginTop: 6, fontSize: 12 }}>
-              Cek <b>API_URL</b> di atas file ini. Harus sama dengan endpoint yang dipakai Dashboard.
+            <div className="field">
+              <label>Tanggal Selesai</label>
+              <input
+                type="date"
+                value={filter.tanggalSelesai}
+                onChange={(e) => updateFilter({ tanggalSelesai: e.target.value })}
+              />
+            </div>
+
+            <div className="field">
+              <label>Status</label>
+              <select
+                value={filter.status}
+                onChange={(e) => updateFilter({ status: e.target.value })}
+              >
+                <option value="SEMUA">Semua</option>
+                <option value="DIPINJAM">Dipinjam</option>
+                <option value="DIKEMBALIKAN">Dikembalikan</option>
+                <option value="TERLAMBAT">Terlambat</option>
+              </select>
+            </div>
+
+            <div className="field">
+              <label>Kategori</label>
+              <select
+                value={filter.kategori}
+                onChange={(e) => updateFilter({ kategori: e.target.value })}
+              >
+                {kategoriList.map((k) => (
+                  <option key={k} value={k}>
+                    {k}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="field span-2">
+              <label>Nama Peminjam</label>
+              <input
+                type="text"
+                placeholder="Ketik nama peminjam... (contoh: agus)"
+                value={filter.q}
+                onChange={(e) => updateFilter({ q: e.target.value })}
+              />
             </div>
           </div>
-        ) : null}
-      </div>
 
-      <div className="card summary">
-        <div>
-          <div className="label">Total Transaksi</div>
-          <div className="value">{ringkasan.totalTransaksi}</div>
-        </div>
-        <div>
-          <div className="label">Total Item</div>
-          <div className="value">{ringkasan.totalItem}</div>
-        </div>
-        <div>
-          <div className="label">Dipinjam</div>
-          <div className="value">{ringkasan.totalDipinjam}</div>
-        </div>
-        <div>
-          <div className="label">Dikembalikan</div>
-          <div className="value">{ringkasan.totalDikembalikan}</div>
-        </div>
-        <div>
-          <div className="label">Terlambat</div>
-          <div className="value">{ringkasan.totalTerlambat}</div>
-        </div>
-      </div>
+          <div className="actions">
+            <button onClick={ambilLaporan} disabled={loading}>
+              {loading ? "Memuat..." : "Refresh Data"}
+            </button>
+            <button onClick={handleExportCSV} disabled={loading || dataTersaring.length === 0}>
+              Export CSV
+            </button>
+            <button onClick={handlePrint} disabled={dataTersaring.length === 0}>
+              Cetak
+            </button>
+          </div>
 
-      <div className="card">
-        <div className="print-header only-print">
-          <h3>Laporan Peminjaman Alat Olahraga</h3>
-          <p>
-            Periode: <b>{filter.tanggalMulai}</b> s/d <b>{filter.tanggalSelesai}</b> | Status:{" "}
-            <b>{filter.status}</b> | Kategori: <b>{filter.kategori}</b>
-          </p>
+          {error ? (
+            <div className="error">
+              ⚠️ {error}
+              <div style={{ marginTop: 6, fontSize: 12 }}>
+                Cek <b>API_URL</b> di atas file ini. Harus sama dengan endpoint yang dipakai Dashboard.
+              </div>
+            </div>
+          ) : null}
         </div>
 
-        <div className="table-wrap">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Tgl Pinjam</th>
-                <th>Tgl Kembali</th>
-                <th>Peminjam</th>
-                <th>Alat</th>
-                <th>Kategori</th>
-                <th>Jumlah</th>
-                <th>Status</th>
-                <th>Denda</th>
+        <div className="card summary">
+          <div>
+            <div className="label">Total Transaksi</div>
+            <div className="value">{ringkasan.totalTransaksi}</div>
+          </div>
+          <div>
+            <div className="label">Total Item</div>
+            <div className="value">{ringkasan.totalItem}</div>
+          </div>
+          <div>
+            <div className="label">Dipinjam</div>
+            <div className="value">{ringkasan.totalDipinjam}</div>
+          </div>
+          <div>
+            <div className="label">Dikembalikan</div>
+            <div className="value">{ringkasan.totalDikembalikan}</div>
+          </div>
+          <div>
+            <div className="label">Terlambat</div>
+            <div className="value">{ringkasan.totalTerlambat}</div>
+          </div>
+        </div>
 
-              </tr>
-            </thead>
-            <tbody>
-              {pageData.length === 0 ? (
+        <div className="card">
+          <div className="print-header only-print">
+            <h3>Laporan Peminjaman Alat Olahraga</h3>
+            <p>
+              Periode: <b>{filter.tanggalMulai}</b> s/d <b>{filter.tanggalSelesai}</b> | Status:{" "}
+              <b>{filter.status}</b> | Kategori: <b>{filter.kategori}</b>
+            </p>
+          </div>
+
+          <div className="table-wrap">
+            <table className="table">
+              <thead>
                 <tr>
-                  <td colSpan={9} style={{ textAlign: "center", padding: 16 }}>
-                    {loading ? "Memuat data..." : "Tidak ada data pada filter ini."}
-                  </td>
+                  <th>ID</th>
+                  <th>Tgl Pinjam</th>
+                  <th>Tgl Kembali</th>
+                  <th>Peminjam</th>
+                  <th>Alat</th>
+                  <th>Kategori</th>
+                  <th>Jumlah</th>
+                  <th>Status</th>
+                  <th>Denda</th>
                 </tr>
-              ) : (
-                pageData.map((x, idx) => (
-                  <tr key={x.id_pinjam || idx}>
-                    <td>{x.id_pinjam || "-"}</td>
-                    <td>{formatTanggal(x.tgl_pinjam)}</td>
-                    <td>{formatTanggal(x.tgl_rencana_kembali)}</td>
-                    <td>{x.nama_peminjam || "-"}</td>
-                    <td>{x.nama_alat || "-"}</td>
-                    <td>{x.kategori || "-"}</td>
-                    <td style={{ textAlign: "center" }}>{x.jumlah ?? 0}</td>
-                    <td>{getStatusEfektif(x) || "-"}</td>
-                    <td>Rp {hitungDenda(x).toLocaleString("id-ID")}</td>
-
+              </thead>
+              <tbody>
+                {pageData.length === 0 ? (
+                  <tr>
+                    <td colSpan={9} style={{ textAlign: "center", padding: 16 }}>
+                      {loading ? "Memuat data..." : "Tidak ada data pada filter ini."}
+                    </td>
                   </tr>
-                ))
+                ) : (
+                  pageData.map((x, idx) => (
+                    <tr key={x.id_pinjam || idx}>
+                      <td>{x.id_pinjam || "-"}</td>
+                      <td>{formatTanggal(x.tgl_pinjam)}</td>
+                      <td>{formatTanggal(x.tgl_rencana_kembali)}</td>
+                      <td>{x.nama_peminjam || "-"}</td>
+                      <td>{x.nama_alat || "-"}</td>
+                      <td>{x.kategori || "-"}</td>
+                      <td style={{ textAlign: "center" }}>{x.jumlah ?? 0}</td>
+                      <td>{getStatusEfektif(x) || "-"}</td>
+                      <td>Rp {hitungDenda(x).toLocaleString("id-ID")}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
 
-              )}
-            </tbody>
-          </table>
-        </div>
+          <div className="no-print pagination">
+            <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1}>
+              Prev
+            </button>
+            <span>
+              Halaman <b>{page}</b> / {totalPages}
+            </span>
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page >= totalPages}
+            >
+              Next
+            </button>
+          </div>
 
-        <div className="no-print pagination">
-          <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1}>
-            Prev
-          </button>
-          <span>
-            Halaman <b>{page}</b> / {totalPages}
-          </span>
-          <button
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            disabled={page >= totalPages}
-          >
-            Next
-          </button>
-        </div>
-
-        <div className="only-print print-footer">
-          <p>
-            Dicetak pada: <b>{new Date().toLocaleString("id-ID")}</b>
-          </p>
+          <div className="only-print print-footer">
+            <p>
+              Dicetak pada: <b>{new Date().toLocaleString("id-ID")}</b>
+            </p>
+          </div>
         </div>
       </div>
     </div>
   );
+
 }

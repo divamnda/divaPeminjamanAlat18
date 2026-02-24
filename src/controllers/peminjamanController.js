@@ -108,7 +108,6 @@ exports.tambahPeminjaman = (req, res) => {
         (err2, result2) => {
           if (err2) return res.status(500).json(err2);
 
-          // log aktivitas
           db.query(
             `INSERT INTO log_aktivitas (aktivitas, tabel, data_id)
              VALUES (?, ?, ?)`,

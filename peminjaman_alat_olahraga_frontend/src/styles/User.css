@@ -1,0 +1,245 @@
+.userPage {
+  padding: 26px;
+  background: #f3f6f9;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.userPage .pageHeader h2 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.userPage .pageHeader p {
+  margin: 6px 0 18px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.userPage .card {
+  background: #0f5b74; 
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 10px 26px rgba(2, 32, 44, 0.16);
+}
+
+.userPage .cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.userPage .cardHeader h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.userPage .alert {
+  background: #ecfeff;
+  border: 1px solid #a5f3fc;
+  color: #155e75;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.userPage .badge {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+.userPage form.formGrid {
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  padding: 14px;
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.userPage .formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.userPage .formGroup label {
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 800;
+  font-size: 13px;
+  margin: 0;
+}
+
+.userPage .formGroup input,
+.userPage .formGroup select {
+  width: 100%;
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: #ffffff;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.userPage .formGroup input:focus,
+.userPage .formGroup select:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25);
+}
+
+.userPage .formActions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-start;
+}
+
+
+  
+.userPage .btn {
+  border: none;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 900;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.userPage .btnPrimary {
+  background: #3b82f6;
+  color: #fff;
+}
+.userPage .btnPrimary:hover {
+  filter: brightness(0.95);
+}
+
+.userPage .btnGhost {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+.userPage .btnGhost:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.userPage .btnWarn {
+  background: #facc15;
+  color: #0f172a;
+}
+.userPage .btnDanger {
+  background: #ef4444;
+  color: #fff;
+}
+
+.userPage .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+.userPage .tableWrap {
+  overflow: auto;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 8px;
+}
+
+.userPage table.prettyTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.userPage table.prettyTable thead th {
+  background: #f8fafc;
+  color: #334155;
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+  font-weight: 800;
+}
+
+.userPage table.prettyTable tbody td {
+  padding: 12px;
+  border-bottom: 1px solid #eef2f7;
+  color: #0f172a;
+}
+
+.userPage table.prettyTable tbody tr:hover td {
+  background: #f9fafb;
+}
+
+.userPage .emptyCell {
+  text-align: center;
+  color: #64748b;
+  padding: 18px;
+}
+
+.userPage .nameCell {
+  font-weight: 900;
+}
+.userPage .muted {
+  color: #64748b;
+}
+
+.userPage .rowActions {
+  display: flex;
+  gap: 10px;
+}
+
+.userPage .pill {
+  display: inline-flex;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.userPage .pillAdmin {
+  background: #dcfce7;
+  color: #166534;
+}
+.userPage .pillPetugas {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+@media (max-width: 900px) {
+  .userPage form.formGrid {
+    grid-template-columns: 1fr;
+  }
+  .userPage .rowActions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+.userPage .formGroup label{
+  display: block !important;
+  width: auto !important;
+}
+
+.userPage .formGroup input,
+.userPage .formGroup select{
+  width: 100% !important;
+  display: block !important;
+}
+
+.pillUser {
+  background: #e8f0ff;
+  color: #2b5bd7;
+}

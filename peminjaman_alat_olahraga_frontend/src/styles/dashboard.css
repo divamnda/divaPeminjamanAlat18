@@ -76,3 +76,32 @@ td {
   padding: 20px;
   background: #edf0f1;
 }
+.pagination{
+  display: flex;
+  align-items: center;
+  justify-content: center;  
+  gap: 12px;
+  margin-top: 16px;
+  width: 100%;
+}
+
+
+.pgBtn{
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 800;
+  cursor: pointer;
+  background: #0f5b74;
+  color: white;
+}
+
+.pgBtn:disabled{
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pgInfo{
+  color: #334155;
+  font-size: 14px;
+}

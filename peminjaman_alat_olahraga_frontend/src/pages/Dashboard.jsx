@@ -21,9 +21,23 @@ const Dashboard = () => {
 
   const fetchDashboard = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/dashboard");
-      const result = await res.json();
-      setData(result);
+      const userLogin = JSON.parse(localStorage.getItem("user")) || {};
+      const role = userLogin?.role;
+
+      const url = "http://localhost:3000/api/dashboard";
+
+      const res = await fetch(url);
+      const payload = await res.json();
+
+      setData({
+        alatTersedia: payload?.alatTersedia ?? 0,
+        sedangDipinjam: payload?.sedangDipinjam ?? 0,
+        selesai: payload?.selesai ?? 0,
+        orders: Array.isArray(payload?.orders) ? payload.orders : [],
+      });
+
+      console.log("URL dashboard:", url);
+      console.log("orders length:", payload?.orders?.length);
     } catch (err) {
       console.error(err);
     }
@@ -34,13 +48,45 @@ const Dashboard = () => {
   }, []);
 
   const ordersTampil = useMemo(() => {
-    if (!Array.isArray(data.orders)) return [];
+    return Array.isArray(data.orders) ? data.orders : [];
+  }, [data.orders]);
 
-    if (!isPeminjam) return data.orders;
 
-    const namaLower = (namaUser || "").toLowerCase();
-    return data.orders.filter((o) => (o.nama_peminjam || "").toLowerCase() === namaLower);
-  }, [data.orders, isPeminjam, namaUser]);
+  useEffect(() => {
+    console.log("== DEBUG USER ==");
+    console.log("userLogin:", userLogin);
+    console.log("role:", role);
+    console.log("namaUser:", namaUser);
+
+    console.log("== DEBUG ORDERS ==");
+    console.log("total orders dari API:", data.orders?.length);
+    console.log("contoh order pertama:", data.orders?.[0]);
+
+    console.log("== DEBUG FILTER ==");
+    const kandidatUser = [
+      userLogin?.nama,
+      userLogin?.username,
+      userLogin?.name,
+      userLogin?.id,
+      userLogin?.id_user,
+      userLogin?.user_id,
+    ]
+      .filter(Boolean)
+      .map((v) => String(v).trim().toLowerCase());
+
+    console.log("kandidatUser:", kandidatUser);
+
+    const cobaMatch = (data.orders || []).slice(0, 5).map((o) => ({
+      nama_peminjam: o.nama_peminjam,
+      nama_user: o.nama_user,
+      username: o.username,
+      id_user: o.id_user,
+      user_id: o.user_id,
+    }));
+    console.log("5 order pertama (field penting):", cobaMatch);
+  }, [userLogin, role, namaUser, data.orders]);
+
+
 
   const cardAngka = useMemo(() => {
     if (!isPeminjam) {
@@ -61,6 +107,23 @@ const Dashboard = () => {
     };
   }, [data.alatTersedia, data.sedangDipinjam, data.selesai, isPeminjam, ordersTampil]);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(ordersTampil.length / itemsPerPage);
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentOrders = ordersTampil.slice(startIndex, startIndex + itemsPerPage);
+
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+    if (ordersTampil.length === 0) {
+      setCurrentPage(1);
+    }
+  }, [ordersTampil.length, totalPages, currentPage]);
+
+
   const handleKembali = async (id_pinjam) => {
     const yakin = confirm("Yakin ingin mengembalikan alat?");
     if (!yakin) return;
@@ -80,12 +143,26 @@ const Dashboard = () => {
       }
 
       alert("Pengembalian berhasil");
-      fetchDashboard(); 
+      fetchDashboard();
     } catch (err) {
       console.error(err);
       alert("Terjadi kesalahan");
     }
   };
+
+  const formatTanggal = (value) => {
+    if (!value) return "-";
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return String(value);
+
+    return d.toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      timeZone: "Asia/Jakarta",
+    });
+  };
+
 
   return (
     <div className="dashboard">
@@ -129,11 +206,11 @@ const Dashboard = () => {
                 </td>
               </tr>
             ) : (
-              ordersTampil.map((item) => (
+              currentOrders.map((item) => (
                 <tr key={item.id_pinjam}>
                   <td>{item.nama_peminjam}</td>
                   <td>{item.nama_alat}</td>
-                  <td>{item.tgl_pinjam}</td>
+                  <td>{formatTanggal(item.tgl_pinjam)}</td>
                   <td>{item.status}</td>
 
                   {isPeminjam && (
@@ -151,10 +228,28 @@ const Dashboard = () => {
           </tbody>
         </table>
 
-        {isPeminjam && (
-          <p style={{ marginTop: 12, color: "#64748b" }}>
-            Menampilkan peminjaman milik: <b>{namaUser || "-"}</b>
-          </p>
+        {ordersTampil.length > 0 && (
+          <div className="pagination">
+            <button
+              className="pgBtn"
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              Prev
+            </button>
+
+            <div className="pgInfo">
+              Halaman <b>{currentPage}</b> dari <b>{totalPages}</b>
+            </div>
+
+            <button
+              className="pgBtn"
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
         )}
       </div>
     </div>
